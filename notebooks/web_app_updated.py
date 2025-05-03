@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import matplotlib.pyplot as plt
+from ase.data import covalent_radii
 from io import BytesIO
 from ase.io import read
 from ase.visualize.plot import plot_atoms
@@ -13,29 +14,49 @@ from llmatdesign.core.discover import discover_bandgap
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-def plot_structure_3d(atoms, bond_cutoff=1.6):
-    # 1) extract positions & symbols
-    xyz  = atoms.get_positions()
+from scipy.spatial.distance import pdist, squareform
+def plot_structure_3d(atoms: Atoms, bond_cutoff=1.1):
+    xyz = atoms.get_positions()
     syms = atoms.get_chemical_symbols()
+    n_atoms = len(atoms)
 
-    # 2) build a per‐element color map from tab20
+    # map element to a color
     symbols = list(dict.fromkeys(syms))
-    cmap     = plt.get_cmap('tab20', len(symbols))
-    palette  = {
-        sym: f'rgb{tuple((np.array(cmap(i)[:3]) * 255).astype(int))}'
+    cmap = plt.get_cmap('tab20', len(symbols))
+    palette = {
+        sym: '#%02x%02x%02x' % tuple(int(255 * x) for x in cmap(i)[:3])
         for i, sym in enumerate(symbols)
     }
-    colors = [palette[s] for s in syms]
+    colors = [palette.get(s, 'grey') for s in syms]
 
-    # 3) find all bonds within cutoff
-    i, j  = neighbor_list('ij', atoms, cutoff=bond_cutoff)
-    pairs = set(tuple(sorted(p)) for p in zip(i, j))
+    # Compute pairwise distances
+    distances = squareform(pdist(xyz))
+    
+    # Compute covalent radii sum matrix
+    radii = np.array([covalent_radii[atom.number] for atom in atoms])
+    cutoff_matrix = bond_cutoff * (radii[:, None] + radii[None, :])
 
-    # 4) build the “sticks” — make them thick
+    # Build bonded pairs (including O–O etc.)
+    pairs = set()
+    for i in range(n_atoms):
+        for j in range(i + 1, n_atoms):
+            if distances[i, j] <= cutoff_matrix[i, j]:
+                pairs.add((i, j))
+
+    # Plot atoms
+    atom_trace = go.Scatter3d(
+        x=xyz[:, 0], y=xyz[:, 1], z=xyz[:, 2],
+        mode='markers',
+        marker=dict(size=12, color=colors, line=dict(width=1, color='black')),
+        text=syms,
+        hoverinfo='text'
+    )
+
+    # Plot bonds
     bond_x, bond_y, bond_z = [], [], []
-    for a, b in pairs:
-        x0, y0, z0 = xyz[a]
-        x1, y1, z1 = xyz[b]
+    for ai, aj in pairs:
+        x0, y0, z0 = xyz[ai]
+        x1, y1, z1 = xyz[aj]
         bond_x += [x0, x1, None]
         bond_y += [y0, y1, None]
         bond_z += [z0, z1, None]
@@ -43,25 +64,10 @@ def plot_structure_3d(atoms, bond_cutoff=1.6):
     bond_trace = go.Scatter3d(
         x=bond_x, y=bond_y, z=bond_z,
         mode='lines',
-        line=dict(color='#FFFFFF', width=8),   # fat “sticks”
+        line=dict(color='white', width=4),
         hoverinfo='none'
     )
 
-    # 5) build the “balls” — smaller with a black rim
-    atom_trace = go.Scatter3d(
-        x=xyz[:,0], y=xyz[:,1], z=xyz[:,2],
-        mode='markers',
-        marker=dict(
-            size=20,                               # ball diameter
-            color=colors,
-            line=dict(color='black', width=2),     # dark outline
-            symbol='circle'
-        ),
-        text=syms,
-        hoverinfo='text'
-    )
-
-    # 6) pack into figure
     fig = go.Figure([bond_trace, atom_trace])
     fig.update_layout(
         scene=dict(
@@ -187,7 +193,7 @@ if st.button("🚀 Run Discovery"):
                 cols[1].metric("Band gap", f"{bg:.3f} eV", delta=f"{bg-target_bandgap:+.3f}")
                 cols[2].metric("Uncertainty", f"{unc:.3f} eV", "" )
                 if alert:
-                    cols[2].warning("⚠️ High uncertainty")
+                    cols[2].warning("⚠️ High uncertainty, need DFT re-evaluation.")
                 cols[3].info(refl)
 
             results.append(step)
