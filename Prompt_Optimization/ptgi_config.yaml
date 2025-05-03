@@ -1,0 +1,24 @@
+# configs/ptgi_config.yaml
+# Prompt‑optimization (ProTeGi) settings
+gradient_batch_size: 16      # number of error cases per gradient
+n_gradients: 3              # gradients per prompt
+n_edits_per_gradient: 2     # edited variants per gradient
+beam_width: 4               # beam size
+bandit_budget: 20           # total eval calls per iteration
+n_iterations: 5             # outer loop steps
+validation_set:
+  - SrTiO3
+  - CdCu2GeS4
+  - Ga2O3
+  - Li2CaSiO4
+  - CeAlO3
+  - Li2CaSiO4
+
+material_formula: SrTiO3    # <-- your starting material
+target_value: 1.4           # <-- e.g. desired band gap in eV
+
+api_key: "OCSzVp0gzQmBfmvQiUNUmwiaDiYQY"
+forcefield_config_path: "../checkpoints/matdeeplearn/force_field/config.yml"
+bandgap_config_path: "../checkpoints/matdeeplearn/band_gap/config.yml"
+formation_energy_config_path: "../checkpoints/matdeeplearn/formation_energy/config.yml"
+mp_api_key: "HykOG4IhaN8Xi2kH3dq0lr42nLpcMBZE"
