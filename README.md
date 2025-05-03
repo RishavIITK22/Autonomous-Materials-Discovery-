@@ -13,3 +13,5 @@ To set up this locally(preferred), in order to further develop, follow the given
       ->pip install -r requirements.txt
       ->pip install -e .
   4. Next run the web_app.py or web_app_updated.py in the .notebooks/ directory as mentioned in this repo to run the web app script.
+
+Note: Here the api key for LLM (LLama model) is used from the OLA Krutrim service.
