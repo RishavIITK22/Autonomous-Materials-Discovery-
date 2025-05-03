@@ -156,9 +156,9 @@ llm = AskLLM(llm_option, api_key=api_key)
 agent = Agent(
     llm,
     save_path="outputs/cifs/",
-    forcefield_config_path="checkpoints/matdeeplearn/force_field/config.yml",
-    bandgap_config_path="checkpoints/matdeeplearn/band_gap/config.yml",
-    formation_energy_config_path="checkpoints/matdeeplearn/formation_energy/config.yml",
+    forcefield_config_path=os.path.abspath("checkpoints/matdeeplearn/force_field/config.yml"),
+    bandgap_config_path=os.path.abspath("checkpoints/matdeeplearn/band_gap/config.yml"),
+    formation_energy_config_path=os.path.abspath("checkpoints/matdeeplearn/formation_energy/config.yml"),
     mp_api_key="HykOG4IhaN8Xi2kH3dq0lr42nLpcMBZE"
 )
 
