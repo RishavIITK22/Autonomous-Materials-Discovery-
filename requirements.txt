@@ -7,6 +7,10 @@ numpy==1.24.3
 pandas
 scipy
 black
+groq
+plotly
+matplotlib
+requests
 pre-commit
 torch==2.0.1
 torch-scatter
