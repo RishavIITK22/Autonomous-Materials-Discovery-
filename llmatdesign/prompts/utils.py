@@ -84,7 +84,7 @@ def get_reflection_prompt_A(
         f"{previous_chemical_formula}, we obtained {current_chemical_formula} "
         f"the band gap value changed from {previous_value:.2f} eV to "
         f"{current_value:.2f} eV. Please write a post-action reflection on "
-        f"the modification in a short sentence on how successful the modification "
+        f"the modification as a detail analysis on how successful the modification "
         f"was in achieving the target band gap value of {target_value} eV and why so:\n"
         f"<modification>"
     )
@@ -110,7 +110,7 @@ def get_reflection_prompt_B(
         f"{previous_chemical_formula}, we obtained {current_chemical_formula} "
         f"the band gap value changed from {previous_value:.2f} eV to "
         f"{current_value:.2f} eV. It should be noted that the modification resulted in a material which does not exist on Materials Project Database, and so possibly in real world.Please carefully recommend further modifications and please write a post-action reflection on "
-        f"the modification in a short sentence on how successful the modification "
+        f"the modification as a detail analysis on how successful the modification "
         f"was in achieving the target band gap value of {target_value} eV and why so:\n"
         f"<modification>"
     )
