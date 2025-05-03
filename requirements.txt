@@ -1,5 +1,16 @@
-ase
+ase==3.24.*
 pymatgen
 mp-api
 openai
 google-generativeai
+numpy==1.24.3
+pandas
+scipy
+black
+pre-commit
+torch==2.0.1
+torch-scatter
+torch-sparse
+torch-cluster
+torch-geometric
+-f https://data.pyg.org/whl/torch-2.0.1+cpu.html
