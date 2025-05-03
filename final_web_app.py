@@ -150,7 +150,8 @@ max_iters        = st.sidebar.slider("Max iters", 10, 100, 55)
 if not api_key:
     st.sidebar.error("Please enter your API key.")
     st.stop()
-
+print("Checkpoint path:", checkpoint_path=os.path.abspath("checkpoints/matdeeplearn/force_field/config.yml"))
+print("Exists:", os.path.exists(checkpoint_path))
 # Init
 llm = AskLLM(llm_option, api_key=api_key)
 agent = Agent(
