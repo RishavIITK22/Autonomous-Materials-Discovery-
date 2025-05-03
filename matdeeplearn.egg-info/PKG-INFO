@@ -1,0 +1,7 @@
+Metadata-Version: 2.2
+Name: matdeeplearn
+Version: 0.0.1
+Summary: Machine Learning package for graph neural netowrks and other models in materials chemistry
+Home-page: https://github.com/Fung-Lab/MatDeepLearn
+Dynamic: home-page
+Dynamic: summary
