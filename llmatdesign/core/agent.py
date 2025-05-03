@@ -109,7 +109,7 @@ class Agent:
             if target_property == "structure":
                 pmg_structure = docs[0].structure
                 #print(pmg_structure) #DEBUGGING STATEMENT
-                ase_atoms = AseAtomsAdaptor.get_atoms(pmg_structure, msonable=False)
+                ase_atoms = AseAtomsAdaptor.get_atoms(pmg_structure)
                 #print(ase_atoms)
                 return [True, ase_atoms]
             return [True, getattr(docs[0], target_property)]
@@ -122,7 +122,7 @@ class Agent:
             if target_property == "structure":
                 pmg_structure = docs[idx].structure
                 #print(pmg_structure) #DEBUGGING STATEMENT
-                ase_atoms = AseAtomsAdaptor.get_atoms(pmg_structure, msonable=False)
+                ase_atoms = AseAtomsAdaptor.get_atoms(pmg_structure)
                 #print(ase_atoms)
                 return [True, ase_atoms]
             return [True, getattr(docs[idx], target_property)]
